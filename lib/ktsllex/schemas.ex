@@ -100,5 +100,5 @@ defmodule Ktsllex.Schemas do
 
   defp extract_body({:ok, %HTTPoison.Response{body: body}}), do: body
 
-  defp http_client(), do: config()[:http_client]
+  defp http_client(), do: config()[:http_client] || HTTPoison
 end

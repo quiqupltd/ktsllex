@@ -12,7 +12,7 @@ Add `ktsllex` to your `deps` list :
  {:ktsllex, "~> 0.0.1"},
 ```
 
-Run `mix deps.get`
+Run `mix do deps.get, deps.compile`
 
 Now you have access to `create_schemas` and `create_topics` mix tasks, eg:
 

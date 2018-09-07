@@ -96,5 +96,5 @@ defmodule Ktsllex.Topics do
     http_client().post(url, body, [@json_content_type] ++ extra_headers)
   end
 
-  defp http_client(), do: config()[:http_client]
+  defp http_client(), do: config()[:http_client] || HTTPoison
 end
