@@ -1,0 +1,5 @@
+{
+  "type": "record",
+  "name": "Envelope",
+  "namespace": "anything"
+}
