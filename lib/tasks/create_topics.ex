@@ -43,12 +43,14 @@ defmodule Mix.Tasks.CreateTopics do
 
     HTTPoison.start()
 
-    Ktsllex.Topics.run(
-      options[:host],
-      options[:user],
-      options[:password],
-      options[:topic]
-    )
-    |> IO.puts()
+    result =
+      Ktsllex.Topics.run(
+        options[:host],
+        options[:user],
+        options[:password],
+        options[:topic]
+      )
+
+    IO.puts(result)
   end
 end

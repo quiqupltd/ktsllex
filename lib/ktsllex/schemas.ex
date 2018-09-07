@@ -55,7 +55,8 @@ defmodule Ktsllex.Schemas do
     url = build_url(host, schema_name, type)
     schema = build_schema(base_schema_file, schema_name, type)
 
-    post(url, schema)
+    url
+    |> post(schema)
     |> extract_body()
     |> Poison.decode!()
     |> inspect
@@ -68,7 +69,8 @@ defmodule Ktsllex.Schemas do
 
   # Overwrite schema name in provided base schema with given schema name
   defp build_schema(base_schema_file, schema_name, type) do
-    read_schema(base_schema_file, type)
+    base_schema_file
+    |> read_schema(type)
     |> Map.put("namespace", schema_name)
     |> update_connect_name(schema_name, type)
   end

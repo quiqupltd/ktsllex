@@ -20,7 +20,8 @@ defmodule Ktsllex.Topics do
 
   """
   def run(host, user, password, topic_name, replication \\ 1, partitions \\ 1) do
-    get_token(host, user, password)
+    host
+    |> get_token(user, password)
     |> create_topic(host, topic_name, replication, partitions)
   end
 
