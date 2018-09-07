@@ -5,7 +5,7 @@ defmodule Ktsllex.MixProject do
     [
       app: :ktsllex,
       version: "0.0.1",
-      elixir: "~> 1.6",
+      elixir: "~> 1.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
