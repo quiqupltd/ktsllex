@@ -1,0 +1,67 @@
+defmodule Ktsllex.MixProject do
+  use Mix.Project
+
+  def project do
+    [
+      app: :ktsllex,
+      version: "0.0.1",
+      elixir: "~> 1.6",
+      elixirc_paths: elixirc_paths(Mix.env),
+      start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
+      deps: deps(),
+      description: description(),
+      package: package(),
+    ]
+  end
+
+  # Run "mix help compile.app" to learn about applications.
+  def application do
+    [
+      mod: {Ktsllex.Application, []},
+      extra_applications: []
+    ]
+  end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
+  # Run "mix help deps" to learn about dependencies.
+  defp deps do
+    [
+      {:poison, "~> 3.1.0"},
+      {:tesla, "~> 0.10.0"},
+      {:env_config, "~> 0.1.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
+      {:httpoison, "~> 1.0"}
+    ]
+  end
+
+  defp description, do: "ktsllex"
+
+  defp package do
+    [
+      files: ["lib", "mix.exs"],
+      organization: "quiqup",
+      maintainers: ["Ian Vaughan"],
+      licenses: ["MIT"],
+      links: %{repository: "https://github.com/quiqupltd/ktsllex"}
+    ]
+  end
+
+  # See the documentation for `Mix` for more info on aliases.
+  defp aliases do
+    [
+      test: ["test"],
+      consistency: consistency()
+    ]
+  end
+
+  defp consistency do
+    [
+      "credo --strict"
+    ]
+  end
+end
