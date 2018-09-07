@@ -31,9 +31,6 @@ defmodule Ktsllex.MixProject do
     [
       {:poison, "~> 3.1.0"},
       {:confex, "~> 3.3.1"},
-      {:tesla, "~> 0.10.0"},
-      {:env_config, "~> 0.1.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
       {:httpoison, "~> 1.0"}
     ]
