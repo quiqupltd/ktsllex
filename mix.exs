@@ -5,20 +5,19 @@ defmodule Ktsllex.MixProject do
     [
       app: :ktsllex,
       version: "0.0.1",
-      elixir: "~> 1.6",
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixir: "~> 1.4",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
       description: description(),
-      package: package(),
+      package: package()
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {Ktsllex.Application, []},
       extra_applications: []
     ]
   end
@@ -31,20 +30,17 @@ defmodule Ktsllex.MixProject do
   defp deps do
     [
       {:poison, "~> 3.1.0"},
-      {:tesla, "~> 0.10.0"},
-      {:env_config, "~> 0.1.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:confex, "~> 3.3.1"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
       {:httpoison, "~> 1.0"}
     ]
   end
 
-  defp description, do: "ktsllex"
+  defp description, do: "Kafka Topic and Schema creator"
 
   defp package do
     [
-      files: ["lib", "mix.exs"],
-      organization: "quiqup",
+      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
       maintainers: ["Ian Vaughan"],
       licenses: ["MIT"],
       links: %{repository: "https://github.com/quiqupltd/ktsllex"}

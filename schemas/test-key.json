@@ -1,0 +1,6 @@
+{
+  "type": "record",
+  "name": "Key",
+  "namespace": "anything",
+  "connect.name": "anything.Key"
+}

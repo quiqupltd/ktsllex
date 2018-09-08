@@ -8,5 +8,5 @@ use Mix.Config
 # if you want to provide default values for your application for
 # 3rd-party users, it should be done in your "mix.exs" file.
 
-config :tracking_locations_api, TrackingLocationsApi.Tasks.Schemas, http_client: HTTPoison
-config :tracking_locations_api, TrackingLocationsApi.Tasks.Topics, http_client: HTTPoison
+config :ktsllex, Ktsllex.Schemas, http_client: HTTPoison
+config :ktsllex, Ktsllex.Topics, http_client: HTTPoison
