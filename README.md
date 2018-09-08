@@ -21,6 +21,57 @@ $ mix create_schemas --host=localhost:8081 --schema=schema_name --base=./path/to
 $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=topic_name
 ```
 
+### `--base`
+
+Above the path to the schema files was passed into `mix create_schemas` via `--base=./path/to/schemas/json`.
+
+It expects to find two files there, one ending `-key.json` and one `-value.json`.
+
+Example: If this command was used:
+
+```bash
+mix create_schemas --base=./schemas/users
+```
+
+Then there should be two flies in ./schemas:
+
+* `./schemas-key.json`
+* `./schemas-value.json`
+
+### `--schema`
+
+The `-key` and `-value` schemas get updated based on the `schema` parameter
+
+Example: Given this `myschema` command :
+
+```bash
+mix create_schemas --schema=myschema
+```
+
+And if this is the `schemas-key.json` file :
+
+```json
+{
+  "type": "record",
+  "name": "Key",
+  "namespace": "anything",
+  "connect.name": "anything.Key"
+}
+```
+
+Then it would be updated to
+
+```json
+{
+  "type": "record",
+  "name": "Key",
+  "namespace": "myschema",
+  "connect.name": "myschema.Key"
+}
+```
+
+
+
 ## Development
 
 * `mix deps.get`
