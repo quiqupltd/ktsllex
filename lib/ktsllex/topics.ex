@@ -51,6 +51,7 @@ defmodule Ktsllex.Topics do
     |> Poison.encode!()
     |> IO.inspect(label: "deets")
     |> post(host <> @login_path)
+    |> IO.inspect(label: "post")
     |> extract_body()
     |> IO.inspect(label: "extract_body")
     |> decode()
@@ -64,6 +65,7 @@ defmodule Ktsllex.Topics do
     :error
   end
 
+  defp decode("CredentialsRejected"), do: :error
   defp decode(:error), do: :error
   defp decode(body), do: body |> Poison.decode!()
 
