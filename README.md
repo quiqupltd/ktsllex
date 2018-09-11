@@ -23,7 +23,7 @@ $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=
 
 ### `--base`
 
-Above the path to the schema files was passed into `mix create_schemas` via `--base=./path/to/schemas/json`.
+The path to the schema files is passed into `mix create_schemas` via `--base=./path/to/schemas/json`.
 
 It expects to find two files there, one ending `-key.json` and one `-value.json`.
 
