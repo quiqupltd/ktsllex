@@ -10,7 +10,7 @@ defmodule Mix.Tasks.CreateSchemas do
 
   ### Usage
   ```
-  $ mix create_schemas --host=localhost:8081 --schema=uk.london.quiqup.tracking_locations --base=./schemas/tracking_locations
+  $ mix create_schemas --host=localhost:8081 --schema=schema-name --base=./schemas/files
   ```
   """
   def run(args) do

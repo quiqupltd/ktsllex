@@ -4,7 +4,7 @@ defmodule Ktsllex.Schemas do
   """
 
   use Confex, otp_app: :ktsllex
-
+  require Logger
   alias Ktsllex.FileJson
 
   @doc """
@@ -16,20 +16,20 @@ defmodule Ktsllex.Schemas do
   * `schema_name` - The schema name to register the schemas as
       * Replaces the schema_name in the schema files with the one provided
   * `base_schema_file` - The path to the schema files
-      * eg "./schemas/tracking_locations"
+      * eg "./schemas/file"
       * Expects to find two files, one ending `-key.json` and one `-value.json`
-      * eg "schemas/tracking_locations-key.json"
+      * eg "schemas/file-key.json"
 
   ### Example
 
-  iex> Schemas.run("localhost:8081", "uk.london.quiqup.tracking_locations", "./schemas/tracking_locations")
+  iex> Schemas.run("localhost:8081", "schema-name", "./schemas/file")
 
   The above would make two HTTP post requests to:
-  * http://localhost:8081/subjects/uk.london.quiqup.tracking_locations-value/versions
-  * http://localhost:8081/subjects/uk.london.quiqup.tracking_locations-key/versions
+  * http://localhost:8081/subjects/schema-name-value/versions
+  * http://localhost:8081/subjects/schema-name-key/versions
 
-  With the schema loaded from `schemas/tracking_locations-key.json` and `schemas/tracking_locations-value.json`,
-  in which the `namespace` within the schema is updated to `uk.london.quiqup.tracking_locations`
+  With the schema loaded from `schemas/file-key.json` and `schemas/file-value.json`,
+  in which the `namespace` within the schema is updated to `schema-name`
 
   More info on the API here:
 
@@ -47,6 +47,8 @@ defmodule Ktsllex.Schemas do
   ```
   """
   def run(host, schema_name, base_schema_file) do
+    Application.ensure_started(:logger)
+
     ["-key", "-value"]
     |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
   end
@@ -55,12 +57,18 @@ defmodule Ktsllex.Schemas do
     url = build_url(host, schema_name, type)
     schema = build_schema(base_schema_file, schema_name, type)
 
-    url
-    |> post(schema)
-    |> extract_body()
-    |> Poison.decode!()
-    |> inspect
-    |> IO.puts()
+    case schema do
+      :error ->
+        :error
+
+      _ ->
+        url
+        |> post(schema)
+        |> extract_body()
+        |> Poison.decode!()
+        |> inspect
+        |> IO.puts()
+    end
   end
 
   defp build_url(host, schema_name, key_or_value) do
@@ -71,10 +79,21 @@ defmodule Ktsllex.Schemas do
   defp build_schema(base_schema_file, schema_name, type) do
     base_schema_file
     |> read_schema(type)
-    |> Map.put("namespace", schema_name)
+    |> update_namespace(schema_name)
     |> update_connect_name(schema_name, type)
   end
 
+  defp update_namespace({:error, _}, _schema_name) do
+    Logger.error("Error reading schema files")
+    :error
+  end
+
+  defp update_namespace(schema, schema_name) do
+    schema
+    |> Map.put("namespace", schema_name)
+  end
+
+  defp update_connect_name(:error, _schema_name, _type), do: :error
   defp update_connect_name(schema, _schema_name, "-value"), do: schema
 
   defp update_connect_name(schema, schema_name, "-key") do

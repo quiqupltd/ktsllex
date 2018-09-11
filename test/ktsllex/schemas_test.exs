@@ -83,5 +83,14 @@ defmodule Ktsllex.SchemasTest do
       assert_receive ^value_result
       refute_receive _
     end
+
+    test "when the files cannot be found, " do
+      host = "localhost:1234"
+      schema_name = "schema_name"
+      base_schema_file = "./schemas/not-found"
+
+      assert [:error, :error] == Subject.run(host, schema_name, base_schema_file)
+      refute_receive _
+    end
   end
 end
