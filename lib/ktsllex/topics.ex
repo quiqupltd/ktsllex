@@ -29,12 +29,19 @@ defmodule Ktsllex.Topics do
     |> create_topic(host, topic_name, replication, partitions)
   end
 
+  def run_token(host, token, topic_name, replication \\ 1, partitions \\ 1) do
+    Application.ensure_started(:logger)
+    Logger.info("#{__MODULE__} host:#{inspect(host)}")
+
+    create_topic(token, host, topic_name, replication, partitions)
+  end
+
   # POST /api/login
   #
   # HOST="http://localhost:3030"
   # TOKEN=$(curl -X POST -H "Content-Type:application/json" -d '{"user":"admin",  "password":"admin"}' ${HOST}/api/login --compress -s | jq -r .'token')
   # echo $TOKEN
-  #  
+  # version 2.0
   # {
   #     "success": true,
   #     "token": "a1f44cb8-0f37-4b96-828c-57bbd8d4934b",
@@ -46,6 +53,9 @@ defmodule Ktsllex.Topics do
   #     },
   #     "schemaRegistryDelete": true
   # }
+  #
+  # version 2.1
+  # "a1f44cb8-0f37-4b96-828c-57bbd8d4934b"
   defp get_token(host, user, password) do
     %{user: user, password: password}
     |> Poison.encode!()
