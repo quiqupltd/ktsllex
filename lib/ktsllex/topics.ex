@@ -34,7 +34,7 @@ defmodule Ktsllex.Topics do
   # HOST="http://localhost:3030"
   # TOKEN=$(curl -X POST -H "Content-Type:application/json" -d '{"user":"admin",  "password":"admin"}' ${HOST}/api/login --compress -s | jq -r .'token')
   # echo $TOKEN
-  #  
+  # version 2.0
   # {
   #     "success": true,
   #     "token": "a1f44cb8-0f37-4b96-828c-57bbd8d4934b",
@@ -46,27 +46,42 @@ defmodule Ktsllex.Topics do
   #     },
   #     "schemaRegistryDelete": true
   # }
+  #
+  # version 2.1
+  # "a1f44cb8-0f37-4b96-828c-57bbd8d4934b"
   defp get_token(host, user, password) do
     %{user: user, password: password}
     |> Poison.encode!()
     |> post(host <> @login_path)
     |> extract_body()
     |> decode()
-    |> extract_token()
   end
 
-  defp extract_body({:ok, %HTTPoison.Response{body: body}}), do: body
+  defp extract_body({:ok, %HTTPoison.Response{body: body, headers: headers}}) do
+    case gzipped(headers) do
+      true -> :zlib.gunzip(body)
+      false -> body
+    end
+  end
 
   defp extract_body({:error, %HTTPoison.Error{reason: reason}}) do
     Logger.error("#{__MODULE__} failed:#{inspect(reason)}")
     :error
   end
 
-  defp decode(:error), do: :error
-  defp decode(body), do: body |> Poison.decode!()
+  defp gzipped(headers) do
+    headers
+    |> Enum.any?(fn kv ->
+      case kv do
+        {"Content-Encoding", "gzip"} -> true
+        _ -> false
+      end
+    end)
+  end
 
-  defp extract_token(:error), do: :error
-  defp extract_token(response), do: response["token"]
+  defp decode("CredentialsRejected"), do: :error
+  defp decode(:error), do: :error
+  defp decode(body), do: body
 
   # POST /api/topics
   #
@@ -88,7 +103,7 @@ defmodule Ktsllex.Topics do
   #     }
   # }
 
-  defp create_topic(nil, _host, _topic_name, _replication, _partitions) do
+  defp create_topic(:error, _host, _topic_name, _replication, _partitions) do
     message = "Failed to get API token, please check username and password"
     Logger.error("#{__MODULE__} #{message}")
     message
