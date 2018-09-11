@@ -9,7 +9,7 @@ Kafka Topic and Schema creator
 
 Add `ktsllex` to your `deps` list :
 ```elixir
- {:ktsllex, "~> 0.0.1"},
+ {:ktsllex, "~> 0.0.2"},
 ```
 
 Run `mix do deps.get, deps.compile`

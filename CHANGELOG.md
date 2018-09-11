@@ -1,5 +1,11 @@
 # Changelog for ktsllex
 
+## 0.0.2
+
+* Better error handling
+* Added Console logging
+* Fixed hex publishing
+
 ## 0.0.1
 
 * Extract from private repo
