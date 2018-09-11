@@ -4,6 +4,7 @@ defmodule Ktsllex.Topics do
   """
 
   use Confex, otp_app: :ktsllex
+  require Logger
 
   @login_path "/api/login"
   @topic_path "/api/topics"
@@ -20,6 +21,8 @@ defmodule Ktsllex.Topics do
 
   """
   def run(host, user, password, topic_name, replication \\ 1, partitions \\ 1) do
+    Logger.info("#{__MODULE__} host:#{inspect(host)}")
+
     host
     |> get_token(user, password)
     |> create_topic(host, topic_name, replication, partitions)
@@ -47,11 +50,21 @@ defmodule Ktsllex.Topics do
     |> Poison.encode!()
     |> post(host <> @login_path)
     |> extract_body()
-    |> Poison.decode!()
+    |> decode()
     |> extract_token()
   end
 
   defp extract_body({:ok, %HTTPoison.Response{body: body}}), do: body
+
+  defp extract_body({:error, %HTTPoison.Error{reason: reason}}) do
+    Logger.error("#{__MODULE__} failed:#{inspect(reason)}")
+    :error
+  end
+
+  defp decode(:error), do: :error
+  defp decode(body), do: body |> Poison.decode!()
+
+  defp extract_token(:error), do: :error
   defp extract_token(response), do: response["token"]
 
   # POST /api/topics
@@ -75,7 +88,7 @@ defmodule Ktsllex.Topics do
   # }
 
   defp create_topic(nil, _host, _topic_name, _replication, _partitions) do
-    "Failed to get API token, please check username and password"
+    Logger.error("#{__MODULE__} Failed to get API token, please check username and password")
   end
 
   defp create_topic(token, host, topic_name, replication, partitions) do
@@ -90,7 +103,11 @@ defmodule Ktsllex.Topics do
     |> Poison.encode!()
     |> post(host <> @topic_path, [extra_headers])
     |> extract_body()
+    |> log_response()
   end
+
+  defp log_response(:error), do: :error
+  defp log_response(response), do: Logger.info("#{__MODULE__} #{inspect(response)}")
 
   defp post(body, url, extra_headers \\ []) do
     http_client().post(url, body, [@json_content_type] ++ extra_headers)
