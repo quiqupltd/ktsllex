@@ -4,7 +4,7 @@ defmodule Ktsllex.Schemas do
   """
 
   use Confex, otp_app: :ktsllex
-
+  require Logger
   alias Ktsllex.FileJson
 
   @doc """
@@ -47,6 +47,8 @@ defmodule Ktsllex.Schemas do
   ```
   """
   def run(host, schema_name, base_schema_file) do
+    Application.ensure_started(:logger)
+
     ["-key", "-value"]
     |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
   end
@@ -55,12 +57,18 @@ defmodule Ktsllex.Schemas do
     url = build_url(host, schema_name, type)
     schema = build_schema(base_schema_file, schema_name, type)
 
-    url
-    |> post(schema)
-    |> extract_body()
-    |> Poison.decode!()
-    |> inspect
-    |> IO.puts()
+    case schema do
+      :error ->
+        :error
+
+      _ ->
+        url
+        |> post(schema)
+        |> extract_body()
+        |> Poison.decode!()
+        |> inspect
+        |> IO.puts()
+    end
   end
 
   defp build_url(host, schema_name, key_or_value) do
@@ -71,10 +79,21 @@ defmodule Ktsllex.Schemas do
   defp build_schema(base_schema_file, schema_name, type) do
     base_schema_file
     |> read_schema(type)
-    |> Map.put("namespace", schema_name)
+    |> update_namespace(schema_name)
     |> update_connect_name(schema_name, type)
   end
 
+  defp update_namespace({:error, _}, _schema_name) do
+    Logger.error("Error reading schema files")
+    :error
+  end
+
+  defp update_namespace(schema, schema_name) do
+    schema
+    |> Map.put("namespace", schema_name)
+  end
+
+  defp update_connect_name(:error, _schema_name, _type), do: :error
   defp update_connect_name(schema, _schema_name, "-value"), do: schema
 
   defp update_connect_name(schema, schema_name, "-key") do
