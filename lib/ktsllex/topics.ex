@@ -49,13 +49,11 @@ defmodule Ktsllex.Topics do
   defp get_token(host, user, password) do
     %{user: user, password: password}
     |> Poison.encode!()
-    |> IO.inspect(label: "deets")
     |> post(host <> @login_path)
     |> IO.inspect(label: "post")
     |> extract_body()
     |> IO.inspect(label: "extract_body")
     |> decode()
-    |> extract_token()
   end
 
   defp extract_body({:ok, %HTTPoison.Response{body: body}}), do: body
@@ -67,10 +65,7 @@ defmodule Ktsllex.Topics do
 
   defp decode("CredentialsRejected"), do: :error
   defp decode(:error), do: :error
-  defp decode(body), do: body |> Poison.decode!()
-
-  defp extract_token(:error), do: :error
-  defp extract_token(response), do: response["token"]
+  defp decode(body), do: body
 
   # POST /api/topics
   #
