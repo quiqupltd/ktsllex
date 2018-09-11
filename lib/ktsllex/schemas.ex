@@ -16,20 +16,20 @@ defmodule Ktsllex.Schemas do
   * `schema_name` - The schema name to register the schemas as
       * Replaces the schema_name in the schema files with the one provided
   * `base_schema_file` - The path to the schema files
-      * eg "./schemas/tracking_locations"
+      * eg "./schemas/file"
       * Expects to find two files, one ending `-key.json` and one `-value.json`
-      * eg "schemas/tracking_locations-key.json"
+      * eg "schemas/file-key.json"
 
   ### Example
 
-  iex> Schemas.run("localhost:8081", "uk.london.quiqup.tracking_locations", "./schemas/tracking_locations")
+  iex> Schemas.run("localhost:8081", "schema-name", "./schemas/file")
 
   The above would make two HTTP post requests to:
-  * http://localhost:8081/subjects/uk.london.quiqup.tracking_locations-value/versions
-  * http://localhost:8081/subjects/uk.london.quiqup.tracking_locations-key/versions
+  * http://localhost:8081/subjects/schema-name-value/versions
+  * http://localhost:8081/subjects/schema-name-key/versions
 
-  With the schema loaded from `schemas/tracking_locations-key.json` and `schemas/tracking_locations-value.json`,
-  in which the `namespace` within the schema is updated to `uk.london.quiqup.tracking_locations`
+  With the schema loaded from `schemas/file-key.json` and `schemas/file-value.json`,
+  in which the `namespace` within the schema is updated to `schema-name`
 
   More info on the API here:
 
