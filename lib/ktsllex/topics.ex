@@ -60,17 +60,31 @@ defmodule Ktsllex.Topics do
     %{user: user, password: password}
     |> Poison.encode!()
     |> post(host <> @login_path)
-    |> IO.inspect(label: "post")
     |> extract_body()
-    |> IO.inspect(label: "extract_body")
     |> decode()
   end
 
-  defp extract_body({:ok, %HTTPoison.Response{body: body}}), do: body
+  defp extract_body({:ok, %HTTPoison.Response{body: body, headers: headers}}) do
+    case gzipped(headers) do
+      true -> :zlib.gunzip(body)
+      false -> body
+    end
+  end
 
   defp extract_body({:error, %HTTPoison.Error{reason: reason}}) do
     Logger.error("#{__MODULE__} failed:#{inspect(reason)}")
     :error
+  end
+
+  defp gzipped(headers) do
+    headers
+    |> Enum.any?(fn kv ->
+      case kv do
+        {"Content-Encoding", "gzip"} -> true
+        {"Content-Encoding", "x-gzip"} -> true
+        _ -> false
+      end
+    end)
   end
 
   defp decode("CredentialsRejected"), do: :error
