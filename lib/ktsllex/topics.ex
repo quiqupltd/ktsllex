@@ -49,8 +49,10 @@ defmodule Ktsllex.Topics do
   defp get_token(host, user, password) do
     %{user: user, password: password}
     |> Poison.encode!()
+    |> IO.inspect(label: "deets")
     |> post(host <> @login_path)
     |> extract_body()
+    |> IO.inspect(label: "extract_body")
     |> decode()
     |> extract_token()
   end
