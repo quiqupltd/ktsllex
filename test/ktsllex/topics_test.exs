@@ -9,10 +9,11 @@ defmodule Ktsllex.TopicsTest do
 
       case (body |> Poison.decode!())["password"] do
         "correct" ->
-          %{token: "mock_token"} |> Poison.encode!() |> mock_http_poison_response(200)
+          "mock_token" |> :zlib.gzip()
+          |> mock_http_poison_response(200, [{"Content-Encoding", "gzip"}])
 
         "wrong" ->
-          %{token: nil} |> Poison.encode!() |> mock_http_poison_response(401)
+          "CredentialsRejected" |> mock_http_poison_response(401)
       end
     end
 
@@ -28,8 +29,13 @@ defmodule Ktsllex.TopicsTest do
       end
     end
 
-    defp mock_http_poison_response(body, status_code) do
-      {:ok, %HTTPoison.Response{body: body, status_code: status_code}}
+    defp mock_http_poison_response(body, status_code, headers \\ []) do
+      {:ok,
+       %HTTPoison.Response{
+         body: body,
+         headers: headers,
+         status_code: status_code
+       }}
     end
   end
 
