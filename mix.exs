@@ -41,7 +41,7 @@ defmodule Ktsllex.MixProject do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
+      files: ["lib", "mix.exs", "README.md", "LICENSE"],
       maintainers: ["Ian Vaughan"],
       licenses: ["MIT"],
       links: %{repository: "https://github.com/quiqupltd/ktsllex"}
