@@ -89,7 +89,9 @@ defmodule Ktsllex.Topics do
   # }
 
   defp create_topic(nil, _host, _topic_name, _replication, _partitions) do
-    Logger.error("#{__MODULE__} Failed to get API token, please check username and password")
+    message = "Failed to get API token, please check username and password"
+    Logger.error("#{__MODULE__} #{message}")
+    message
   end
 
   defp create_topic(token, host, topic_name, replication, partitions) do
@@ -108,7 +110,11 @@ defmodule Ktsllex.Topics do
   end
 
   defp log_response(:error), do: :error
-  defp log_response(response), do: Logger.info("#{__MODULE__} #{inspect(response)}")
+
+  defp log_response(response) do
+    Logger.info("#{__MODULE__} #{inspect(response)}")
+    response
+  end
 
   defp post(body, url, extra_headers \\ []) do
     http_client().post(url, body, [@json_content_type] ++ extra_headers)
