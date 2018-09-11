@@ -30,7 +30,7 @@ defmodule Mix.Tasks.CreateSchemas do
       exit({:shutdown, 1})
     end
 
-    if options[:schema] == nil do
+    if options[:base] == nil do
       IO.puts("base missing, set --base=<base>")
       exit({:shutdown, 1})
     end
