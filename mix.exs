@@ -32,7 +32,8 @@ defmodule Ktsllex.MixProject do
       {:poison, "~> 3.1.0"},
       {:confex, "~> 3.3.1"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
-      {:httpoison, "~> 1.0"}
+      {:httpoison, "~> 1.0"},
+      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false}
     ]
   end
 
@@ -40,7 +41,7 @@ defmodule Ktsllex.MixProject do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
+      files: ["lib", "mix.exs", "README.md", "LICENSE"],
       maintainers: ["Ian Vaughan"],
       licenses: ["MIT"],
       links: %{repository: "https://github.com/quiqupltd/ktsllex"}
