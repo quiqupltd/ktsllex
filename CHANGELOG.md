@@ -1,5 +1,9 @@
 # Changelog for ktsllex
 
+## 0.0.3
+
+* Fixes for Lenses 2.1 API
+
 ## 0.0.2
 
 * Better error handling
