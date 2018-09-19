@@ -5,8 +5,8 @@ defmodule Ktsllex.Topics do
 
   use Confex, otp_app: :ktsllex
   require Logger
+  alias Ktsllex.{Login, Body}
 
-  @login_path "/api/login"
   @topic_path "/api/topics"
   @json_content_type {"Content-Type", "application/json"}
 
@@ -25,61 +25,10 @@ defmodule Ktsllex.Topics do
     Logger.info("#{__MODULE__} host:#{inspect(host)}")
 
     host
-    |> get_token(user, password)
+    |> login().get_token(user, password)
     |> create_topic(host, topic_name, replication, partitions)
   end
 
-  # POST /api/login
-  #
-  # HOST="http://localhost:3030"
-  # TOKEN=$(curl -X POST -H "Content-Type:application/json" -d '{"user":"admin",  "password":"admin"}' ${HOST}/api/login --compress -s | jq -r .'token')
-  # echo $TOKEN
-  # version 2.0
-  # {
-  #     "success": true,
-  #     "token": "a1f44cb8-0f37-4b96-828c-57bbd8d4934b",
-  #     "user": {
-  #         "id": "admin",
-  #         "name": "Admin User",
-  #         "email": null,
-  #         "roles": ["admin", "read", "write", "nodata"]
-  #     },
-  #     "schemaRegistryDelete": true
-  # }
-  #
-  # version 2.1
-  # "a1f44cb8-0f37-4b96-828c-57bbd8d4934b"
-  defp get_token(host, user, password) do
-    %{user: user, password: password}
-    |> Poison.encode!()
-    |> post(host <> @login_path)
-    |> extract_body()
-    |> decode()
-  end
-
-  defp extract_body({:ok, %HTTPoison.Response{body: body, headers: headers}}) do
-    case gzipped(headers) do
-      true -> :zlib.gunzip(body)
-      false -> body
-    end
-  end
-
-  defp extract_body({:error, %HTTPoison.Error{reason: reason}}) do
-    Logger.error("#{__MODULE__} failed:#{inspect(reason)}")
-    :error
-  end
-
-  defp gzipped(headers) do
-    headers
-    |> Enum.any?(fn kv ->
-      case kv do
-        {"Content-Encoding", "gzip"} -> true
-        _ -> false
-      end
-    end)
-  end
-
-  defp decode("CredentialsRejected"), do: :error
   defp decode(:error), do: :error
   defp decode(body), do: body
 
@@ -110,8 +59,6 @@ defmodule Ktsllex.Topics do
   end
 
   defp create_topic(token, host, topic_name, replication, partitions) do
-    extra_headers = {"x-kafka-lenses-token", token}
-
     %{
       topicName: topic_name,
       replication: replication,
@@ -119,8 +66,8 @@ defmodule Ktsllex.Topics do
       configs: %{}
     }
     |> Poison.encode!()
-    |> post(host <> @topic_path, [extra_headers])
-    |> extract_body()
+    |> post(host <> @topic_path, token)
+    |> Body.extract()
     |> log_response()
   end
 
@@ -131,9 +78,13 @@ defmodule Ktsllex.Topics do
     response
   end
 
-  defp post(body, url, extra_headers \\ []) do
-    http_client().post(url, body, [@json_content_type] ++ extra_headers)
+  defp add_token(token), do: [{"x-kafka-lenses-token", token}]
+
+  defp post(body, url, token) do
+    http_client().post(url, body, [@json_content_type] ++ add_token(token))
   end
 
   defp http_client(), do: config()[:http_client] || HTTPoison
+
+  defp login(), do: config()[:login] || Login
 end

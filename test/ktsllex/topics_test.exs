@@ -3,20 +3,12 @@ defmodule Ktsllex.TopicsTest do
 
   alias Ktsllex.Topics, as: Subject
 
+  defmodule LoginMock do
+    def get_token(host, user, "correct"), do: "mock_token"
+    def get_token(host, user, "wrong"), do: :error
+  end
+
   defmodule HTTPoisonMock do
-    def post("localhost:1234/api/login", body, headers) do
-      send(:current_test, %{login_body: body, login_headers: headers})
-
-      case (body |> Poison.decode!())["password"] do
-        "correct" ->
-          "mock_token" |> :zlib.gzip()
-          |> mock_http_poison_response(200, [{"Content-Encoding", "gzip"}])
-
-        "wrong" ->
-          "CredentialsRejected" |> mock_http_poison_response(401)
-      end
-    end
-
     def post("localhost:1234/api/topics", body, headers) do
       send(:current_test, %{topic_body: body, topic_headers: headers})
 
@@ -42,7 +34,7 @@ defmodule Ktsllex.TopicsTest do
   setup do
     config = Application.get_env(:ktsllex, Subject)
 
-    Application.put_env(:ktsllex, Subject, http_client: HTTPoisonMock)
+    Application.put_env(:ktsllex, Subject, http_client: HTTPoisonMock, login: LoginMock)
 
     on_exit(fn ->
       Application.put_env(:ktsllex, Subject, config)
@@ -63,10 +55,6 @@ defmodule Ktsllex.TopicsTest do
       topic_name = "topic_name"
 
       assert "Topic `topic_name` created" == Subject.run(host, user, pass, topic_name)
-
-      login_body = ~s({"user":"abc","password":"correct"})
-      login_headers = [{"Content-Type", "application/json"}]
-      assert_receive %{login_body: ^login_body, login_headers: ^login_headers}
 
       topic_body = ~s({"topicName":"topic_name","replication":1,"partitions":1,"configs":{}})
 
