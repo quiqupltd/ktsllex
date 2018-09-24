@@ -70,7 +70,33 @@ Then it would be updated to
 }
 ```
 
+### Compatibility Config
 
+To `get` or `set` compatibility config :
+
+```elixir
+# Get global
+iex> Ktsllex.Config.get("http://localhost:8081")
+%{"compatibilityLevel" => "BACKWARD"}
+
+# Set global
+iex> Ktsllex.Config.set("http://localhost:8081", "BACKWARD")
+%{"compatibilityLevel" => "BACKWARD"}
+
+# Get for a given topic name
+iex> Ktsllex.Config.get("http://localhost:8081", "topic-name")
+%{"compatibilityLevel" => "BACKWARD"}
+
+# Set for a given topic name
+iex> Ktsllex.Config.set("http://localhost:8081", "BACKWARD", "topic-name")
+%{"compatibilityLevel" => "BACKWARD"}
+```
+
+If getting a topic that does not have a compatibility set, it will return this:
+
+```elixir
+%{"error_code" => 40401, "message" => "Subject not found."}
+```
 
 ## Development
 
