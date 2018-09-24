@@ -29,9 +29,6 @@ defmodule Ktsllex.Topics do
     |> create_topic(host, topic_name, replication, partitions)
   end
 
-  defp decode(:error), do: :error
-  defp decode(body), do: body
-
   # POST /api/topics
   #
   # export TOKEN=187568a9-79bd-4064-9b6f-b6a682b9512d
