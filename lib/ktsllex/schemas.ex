@@ -47,7 +47,11 @@ defmodule Ktsllex.Schemas do
   ```
   """
   def run(host, schema_name, base_schema_file) do
-    Application.ensure_started(:logger)
+    Logger.info(
+      "#{__MODULE__} Creating schemas on:#{inspect(host)} with name:#{inspect(schema_name)} from:#{
+        inspect(base_schema_file)
+      }"
+    )
 
     ["-key", "-value"]
     |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
