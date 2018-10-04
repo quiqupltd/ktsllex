@@ -10,3 +10,16 @@ use Mix.Config
 
 config :ktsllex, Ktsllex.Schemas, http_client: HTTPoison
 config :ktsllex, Ktsllex.Topics, http_client: HTTPoison
+
+config :ktsllex,
+  # Should it run the migration when called? Default: true
+  run_migrations: true,
+  schema_registry_host: "http://localhost:8081",
+  schema_name: "schema_name",
+  # Need to know where the app is to get the path to the schema files
+  app_name: :your_otp_app_name,
+  base_path: "./schemas/file/location",
+  lenses_host: "http://localhost:3030",
+  lenses_user: "admin",
+  lenses_pass: "admin",
+  lenses_topic: "lenses_topic"

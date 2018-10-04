@@ -5,7 +5,7 @@
 
 Kafka Topic and Schema creator
 
-## Usage
+## Setup
 
 Add `ktsllex` to your `deps` list :
 ```elixir
@@ -14,12 +14,48 @@ Add `ktsllex` to your `deps` list :
 
 Run `mix do deps.get, deps.compile`
 
-Now you have access to `create_schemas` and `create_topics` mix tasks, eg:
+### Auto migrations
+
+To have it run schema migrations at application boot time.
+
+Add `ktsllex` to your app boot sequence. After logger, and before any schema reading apps.
+
+```elixir
+      extra_applications: [
+        :logger,
+        ...
+        :ktsllex,
+        ...
+        :event_serializer
+```
+
+And update config.exs
+
+```elixir
+  config :ktsllex,
+    # Should it run the migration when called? Default: true
+    run_migrations: true,
+    schema_registry_host: "http://localhost:8081",
+    schema_name: "schema_name",
+    # Need to know where the app is to get the path to the schema files
+    app_name: :your_otp_app_name,
+    base_path: "./schemas/file/location",
+    lenses_host: "http://localhost:3030",
+    lenses_user: "admin",
+    lenses_pass: "admin",
+    lenses_topic: "lenses_topic"
+```
+
+## Usage
+
+You have access to `create_schemas` and `create_topics` mix tasks, eg:
 
 ```bash
 $ mix create_schemas --host=localhost:8081 --schema=schema_name --base=./path/to/schemas/json
 $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=topic_name
 ```
+
+### Options
 
 * `--base`
 
