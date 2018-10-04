@@ -16,8 +16,8 @@ defmodule Ktsllex do
 
   @spec start(any(), any()) :: :ignore | {:error, any()} | {:ok, pid()}
   def start(_type, _args) do
+    Confex.resolve_env!(:ktsllex)
     Ktsllex.Schema.Migration.run()
-
     Supervisor.start_link([], strategy: :one_for_one)
   end
 end

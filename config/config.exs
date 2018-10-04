@@ -14,12 +14,12 @@ config :ktsllex, Ktsllex.Topics, http_client: HTTPoison
 config :ktsllex,
   # Should it run the migration when called? Default: true
   run_migrations: true,
-  schema_registry_host: "http://localhost:8081",
-  schema_name: "schema_name",
-  # Need to know where the app is to get the path to the schema files
-  app_name: :your_otp_app_name,
-  base_path: "./schemas/file/location",
-  lenses_host: "http://localhost:3030",
-  lenses_user: "admin",
-  lenses_pass: "admin",
-  lenses_topic: "lenses_topic"
+  schema_registry_host: {:system, "AVLIZER_CONFLUENT_SCHEMAREGISTRY_URL", "http://localhost:8081"},
+  # Reads the yaml schema file from :
+  base_path: {:system, "KAFKA_SCHEMA_BASE_PATH", "./schemas"},
+  schema_name: {:system, "KAFKA_SCHEMA_NAME", "schema_name"},
+  app_name: :app,
+  lenses_host: {:system, "LENSES_HOST", "http://localhost:3030"},
+  lenses_user: {:system, "LENSES_USER", "admin"},
+  lenses_pass: {:system, "LENSES_PASS", "admin"},
+  lenses_topic: {:system, "LENSES_TOPIC", "topic_name"}
