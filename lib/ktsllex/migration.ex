@@ -24,8 +24,6 @@ defmodule Ktsllex.Schema.Migration do
   def run(), do: run_migrations?() |> perform()
 
   defp perform(true) do
-    base_path() |> IO.inspect(label: "base_path")
-
     Ktsllex.Schemas.run(schema_registry_host(), schema_name(), schema_path())
     Ktsllex.Topics.run(lenses_host(), lenses_user(), lenses_pass(), lenses_topic())
 

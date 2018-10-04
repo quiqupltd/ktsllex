@@ -18,7 +18,7 @@ config :ktsllex,
   # Reads the yaml schema file from :
   base_path: {:system, "KAFKA_SCHEMA_BASE_PATH", "./schemas"},
   schema_name: {:system, "KAFKA_SCHEMA_NAME", "schema_name"},
-  app_name: :app,
+  app_name: :ktsllex,
   lenses_host: {:system, "LENSES_HOST", "http://localhost:3030"},
   lenses_user: {:system, "LENSES_USER", "admin"},
   lenses_pass: {:system, "LENSES_PASS", "admin"},
