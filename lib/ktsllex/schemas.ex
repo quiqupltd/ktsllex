@@ -66,8 +66,7 @@ defmodule Ktsllex.Schemas do
         |> post(schema)
         |> extract_body()
         |> Poison.decode!()
-        |> inspect
-        |> IO.puts()
+        |> output_result()
     end
   end
 
@@ -118,6 +117,10 @@ defmodule Ktsllex.Schemas do
   end
 
   defp extract_body({:ok, %HTTPoison.Response{body: body}}), do: body
+
+  defp output_result(result) do
+    Logger.info("#{__MODULE__} created schema #{inspect(result)}")
+  end
 
   defp http_client(), do: config()[:http_client] || HTTPoison
 end
