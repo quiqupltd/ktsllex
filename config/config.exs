@@ -12,8 +12,8 @@ config :ktsllex, Ktsllex.Schemas, http_client: HTTPoison
 config :ktsllex, Ktsllex.Topics, http_client: HTTPoison
 
 config :ktsllex,
-  # Should it run the migration when called? Default: true
-  run_migrations: true,
+  # Should it run the migration when called? Default: false
+  run_migrations: false,
   schema_registry_host: {:system, "AVLIZER_CONFLUENT_SCHEMAREGISTRY_URL", "http://localhost:8081"},
   # Reads the yaml schema file from :
   base_path: {:system, "KAFKA_SCHEMA_BASE_PATH", "./schemas"},
