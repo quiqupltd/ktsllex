@@ -21,7 +21,7 @@ $ mix create_schemas --host=localhost:8081 --schema=schema_name --base=./path/to
 $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=topic_name
 ```
 
-### `--base`
+* `--base`
 
 The path to the schema files is passed into `mix create_schemas` via `--base=./path/to/schemas/json`.
 
@@ -38,7 +38,7 @@ Then there should be two flies in ./schemas:
 * `./schemas-key.json`
 * `./schemas-value.json`
 
-### `--schema`
+* `--schema`
 
 The `-key` and `-value` schemas get updated based on the `schema` parameter
 
