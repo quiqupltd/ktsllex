@@ -4,8 +4,8 @@ defmodule Ktsllex.TopicsTest do
   alias Ktsllex.Topics, as: Subject
 
   defmodule LoginMock do
-    def get_token(host, user, "correct"), do: "mock_token"
-    def get_token(host, user, "wrong"), do: :error
+    def get_token(_host, _user, "correct"), do: "mock_token"
+    def get_token(_host, _user, "wrong"), do: :error
   end
 
   defmodule HTTPoisonMock do

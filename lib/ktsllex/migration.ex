@@ -34,7 +34,7 @@ defmodule Ktsllex.Schema.Migration do
 
   defp schema_path(), do: app_path() <> "/" <> base_path()
 
-  defp app_path(), do: :code.priv_dir(app_name()) |> to_string()
+  defp app_path(), do: app_name() |> :code.priv_dir() |> to_string()
 
   defp run_migrations?, do: Application.get_env(:ktsllex, :run_migrations, false)
 
