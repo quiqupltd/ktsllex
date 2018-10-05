@@ -5,7 +5,7 @@
 
 Kafka Topic and Schema creator
 
-## Usage
+## Setup
 
 Add `ktsllex` to your `deps` list :
 ```elixir
@@ -14,14 +14,50 @@ Add `ktsllex` to your `deps` list :
 
 Run `mix do deps.get, deps.compile`
 
-Now you have access to `create_schemas` and `create_topics` mix tasks, eg:
+### Auto migrations
+
+To have it run schema migrations at application boot time.
+
+Add `ktsllex` to your app boot sequence. After logger, and before any schema reading apps.
+
+```elixir
+      extra_applications: [
+        :logger,
+        ...
+        :ktsllex,
+        ...
+        :event_serializer
+```
+
+And update config.exs
+
+```elixir
+  config :ktsllex,
+    # Should it run the migration when called? Default: false
+    run_migrations: false,
+    schema_registry_host: {:system, "AVLIZER_CONFLUENT_SCHEMAREGISTRY_URL", "http://localhost:8081"},
+    # Reads the yaml schema file from :
+    base_path: {:system, "KAFKA_SCHEMA_BASE_PATH", "./schemas"},
+    schema_name: {:system, "KAFKA_SCHEMA_NAME", "schema_name"},
+    app_name: :app,
+    lenses_host: {:system, "LENSES_HOST", "http://localhost:3030"},
+    lenses_user: {:system, "LENSES_USER", "admin"},
+    lenses_pass: {:system, "LENSES_PASS", "admin"},
+    lenses_topic: {:system, "LENSES_TOPIC", "topic_name"}
+```
+
+## Usage
+
+You have access to `create_schemas` and `create_topics` mix tasks, eg:
 
 ```bash
 $ mix create_schemas --host=localhost:8081 --schema=schema_name --base=./path/to/schemas/json
 $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=topic_name
 ```
 
-### `--base`
+### Options
+
+* `--base`
 
 The path to the schema files is passed into `mix create_schemas` via `--base=./path/to/schemas/json`.
 
@@ -38,7 +74,7 @@ Then there should be two flies in ./schemas:
 * `./schemas-key.json`
 * `./schemas-value.json`
 
-### `--schema`
+* `--schema`
 
 The `-key` and `-value` schemas get updated based on the `schema` parameter
 

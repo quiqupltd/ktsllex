@@ -21,8 +21,9 @@ defmodule Ktsllex.Topics do
 
   """
   def run(host, user, password, topic_name, replication \\ 1, partitions \\ 1) do
-    Application.ensure_started(:logger)
-    Logger.info("#{__MODULE__} host:#{inspect(host)}")
+    Logger.info(
+      "#{__MODULE__} Creating topic on host:#{inspect(host)} with name:#{inspect(topic_name)}"
+    )
 
     host
     |> login().get_token(user, password)

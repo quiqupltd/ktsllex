@@ -1,6 +1,6 @@
 defmodule Ktsllex.Config do
   @moduledoc """
-  This updates the config for schemas
+  This updates the Kafka config for schemas
   """
 
   use Confex, otp_app: :ktsllex

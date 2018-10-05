@@ -10,3 +10,16 @@ use Mix.Config
 
 config :ktsllex, Ktsllex.Schemas, http_client: HTTPoison
 config :ktsllex, Ktsllex.Topics, http_client: HTTPoison
+
+config :ktsllex,
+  # Should it run the migration when called? Default: false
+  run_migrations: false,
+  schema_registry_host: {:system, "AVLIZER_CONFLUENT_SCHEMAREGISTRY_URL", "http://localhost:8081"},
+  # Reads the yaml schema file from :
+  base_path: {:system, "KAFKA_SCHEMA_BASE_PATH", "./schemas"},
+  schema_name: {:system, "KAFKA_SCHEMA_NAME", "schema_name"},
+  app_name: :ktsllex,
+  lenses_host: {:system, "LENSES_HOST", "http://localhost:3030"},
+  lenses_user: {:system, "LENSES_USER", "admin"},
+  lenses_pass: {:system, "LENSES_PASS", "admin"},
+  lenses_topic: {:system, "LENSES_TOPIC", "topic_name"}

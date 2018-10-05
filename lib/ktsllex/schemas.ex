@@ -47,7 +47,11 @@ defmodule Ktsllex.Schemas do
   ```
   """
   def run(host, schema_name, base_schema_file) do
-    Application.ensure_started(:logger)
+    Logger.info(
+      "#{__MODULE__} Creating schemas on:#{inspect(host)} with name:#{inspect(schema_name)} from:#{
+        inspect(base_schema_file)
+      }"
+    )
 
     ["-key", "-value"]
     |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
@@ -66,8 +70,7 @@ defmodule Ktsllex.Schemas do
         |> post(schema)
         |> extract_body()
         |> Poison.decode!()
-        |> inspect
-        |> IO.puts()
+        |> output_result()
     end
   end
 
@@ -118,6 +121,10 @@ defmodule Ktsllex.Schemas do
   end
 
   defp extract_body({:ok, %HTTPoison.Response{body: body}}), do: body
+
+  defp output_result(result) do
+    Logger.info("#{__MODULE__} created schema #{inspect(result)}")
+  end
 
   defp http_client(), do: config()[:http_client] || HTTPoison
 end
