@@ -18,7 +18,7 @@ Run `mix do deps.get, deps.compile`
 
 To have it run schema migrations at application boot time.
 
-Add `ktsllex` to your app boot sequence. After logger, and before any schema reading apps.
+Add `ktsllex` to your app boot sequence. After `logger`, and before any schema reading apps.
 
 ```elixir
       extra_applications: [
@@ -46,6 +46,9 @@ And update config.exs
     lenses_topic: {:system, "LENSES_TOPIC", "topic_name"}
 ```
 
+* `base_path` - needs to be relitive to a path that is releasted with your app, eg `priv`
+
+
 ## Usage
 
 You have access to `create_schemas` and `create_topics` mix tasks, eg:
@@ -55,7 +58,7 @@ $ mix create_schemas --host=localhost:8081 --schema=schema_name --base=./path/to
 $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=topic_name
 ```
 
-### Options
+### Options
 
 * `--base`
 
