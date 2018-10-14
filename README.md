@@ -1,7 +1,10 @@
 # Ktsllex
 
 [![Build Status](https://travis-ci.org/quiqupltd/ktsllex.svg?branch=master)](https://travis-ci.org/quiqupltd/ktsllex)
-[![Package Version](https://img.shields.io/hexpm/v/ktsllex.svg)](https://hex.pm/packages/ktsllex)
+[![Coverage Status](https://coveralls.io/repos/github/quiqupltd/ktsllex/badge.svg?branch=master)](https://coveralls.io/github/quiqupltd/ktsllex?branch=master) 
+[![Hex docs](http://img.shields.io/badge/hex.pm-docs-green.svg?style=flat-square)](https://hexdocs.pm/ktsllex) 
+[![Hex Version](http://img.shields.io/hexpm/v/ktsllex.svg?style=flat-square)](https://hex.pm/packages/ktsllex) 
+[![License](https://img.shields.io/hexpm/l/ktsllex.svg?style=flat-square)](https://github.com/quiqupltd/ktsllex/blob/master/LICENSE.txt)
 
 Kafka Topic and Schema creator
 
