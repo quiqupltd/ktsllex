@@ -36,7 +36,7 @@ do so.
 * Open a [pull request][using-pull-requests] that relates to *only* one subject
   with a clear title and description in grammatically correct, complete sentences.
 
-[issue-tracker]: https://github.com/QuiqUpLTD/slot_sync/issues
+[issue-tracker]: https://github.com/QuiqUpLTD/ktsllex/issues
 [fork-how]: http://gun.io/blog/how-to-github-fork-branch-and-pull-request
 [git-style-guide]: https://github.com/agis-/git-style-guide
 [using-pull-requests]: https://help.github.com/articles/using-pull-requests
