@@ -141,3 +141,8 @@ If getting a topic that does not have a compatibility set, it will return this:
 
 * `mix deps.get`
 * `mix test`
+
+## License
+
+Copyright (c) 2018 Quiqup LTD, MIT License.
+See [LICENSE.txt](https://github.com/quiqupltd/ktsllex/blob/master/LICENSE.txt) for further details.
