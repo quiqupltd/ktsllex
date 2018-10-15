@@ -15,10 +15,16 @@ defmodule Ktsllex.Schemas do
   * `host` - A kafka broker, eg localhost:8081
   * `schema_name` - The schema name to register the schemas as
       * Replaces the schema_name in the schema files with the one provided
-  * `base_schema_file` - The path to the schema files
+  * `base_schema_file` - The path to the schema file
       * eg "./schemas/file"
-      * Expects to find two files, one ending `-key.json` and one `-value.json`
-      * eg "schemas/file-key.json"
+      * Expects to find a single file for a schema with the following structure
+      * {
+      *   "name": "test",
+      *   "key_avro_schema": {},
+      *   "value_avro_schema": {}
+      * }
+
+      * eg "schemas/file.json"
 
   ### Example
 
@@ -28,7 +34,7 @@ defmodule Ktsllex.Schemas do
   * http://localhost:8081/subjects/schema-name-value/versions
   * http://localhost:8081/subjects/schema-name-key/versions
 
-  With the schema loaded from `schemas/file-key.json` and `schemas/file-value.json`,
+  With the schema loaded from `schemas/file.json`,
   in which the `namespace` within the schema is updated to `schema-name`
 
   More info on the API here:
@@ -53,8 +59,10 @@ defmodule Ktsllex.Schemas do
       }"
     )
 
-    ["-key", "-value"]
-    |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
+    IO.inspect(
+      ["key", "value"]
+      |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
+    )
   end
 
   defp process(host, schema_name, base_schema_file, type) do
@@ -75,7 +83,7 @@ defmodule Ktsllex.Schemas do
   end
 
   defp build_url(host, schema_name, key_or_value) do
-    host <> "/subjects/" <> schema_name <> key_or_value <> "/versions"
+    host <> "/subjects/" <> schema_name <> "-" <> key_or_value <> "/versions"
   end
 
   # Overwrite schema name in provided base schema with given schema name
@@ -97,16 +105,28 @@ defmodule Ktsllex.Schemas do
   end
 
   defp update_connect_name(:error, _schema_name, _type), do: :error
-  defp update_connect_name(schema, _schema_name, "-value"), do: schema
+  defp update_connect_name(schema, _schema_name, "value"), do: schema
 
-  defp update_connect_name(schema, schema_name, "-key") do
+  defp update_connect_name(schema, schema_name, "key") do
     schema
     |> Map.put("connect.name", schema_name <> ".Key")
   end
 
   defp read_schema(base_schema_file, type) do
-    (base_schema_file <> type <> ".json")
-    |> FileJson.read!()
+    json_file =
+      (base_schema_file <> ".json")
+      |> FileJson.read!()
+
+    case json_file do
+      %{"key_avro_schema" => key_schema, "value_avro_schema" => value_schema} ->
+        case type do
+          "key" -> key_schema
+          "value" -> value_schema
+        end
+
+      _ ->
+        {:error, :enoent}
+    end
   end
 
   defp post(url, schema) do
