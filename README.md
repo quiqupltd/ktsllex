@@ -67,7 +67,7 @@ $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=
 
 The path to the schema files is passed into `mix create_schemas` via `--base=./path/to/schemas/json`.
 
-It expects to find two files there, one ending `-key.json` and one `-value.json`.
+It expects to find a single file there for the schema.
 
 Example: If this command was used:
 
@@ -75,14 +75,13 @@ Example: If this command was used:
 mix create_schemas --base=./schemas/users
 ```
 
-Then there should be two flies in ./schemas:
+Then there should be a single flie in ./schemas:
 
-- `./schemas-key.json`
-- `./schemas-value.json`
+- `./schemas.json`
 
 - `--schema`
 
-The `-key` and `-value` schemas get updated based on the `schema` parameter
+The schemas get updated based on the `schema` parameter
 
 Example: Given this `myschema` command :
 
@@ -90,14 +89,22 @@ Example: Given this `myschema` command :
 mix create_schemas --schema=myschema
 ```
 
-And if this is the `schemas-key.json` file :
+And if this is the `schemas.json` file :
 
 ```json
 {
-  "type": "record",
-  "name": "Key",
-  "namespace": "anything",
-  "connect.name": "anything.Key"
+  "name": "test",
+  "key_avro_schema": {
+    "type": "record",
+    "name": "Key",
+    "namespace": "anything",
+    "connect.name": "anything.Key"
+  },
+  "value_avro_schema": {
+    "type": "record",
+    "name": "Envelope",
+    "namespace": "anything"
+  }
 }
 ```
 
@@ -105,10 +112,18 @@ Then it would be updated to
 
 ```json
 {
-  "type": "record",
-  "name": "Key",
-  "namespace": "myschema",
-  "connect.name": "myschema.Key"
+  "name": "test",
+  "key_avro_schema": {
+    "type": "record",
+    "name": "Key",
+    "namespace": "myschema",
+    "connect.name": "myschema.Key"
+  },
+  "value_avro_schema": {
+    "type": "record",
+    "name": "Envelope",
+    "namespace": "myschema"
+  }
 }
 ```
 

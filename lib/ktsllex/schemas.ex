@@ -59,10 +59,8 @@ defmodule Ktsllex.Schemas do
       }"
     )
 
-    IO.inspect(
-      ["key", "value"]
-      |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
-    )
+    ["key", "value"]
+    |> Enum.map(fn type -> process(host, schema_name, base_schema_file, type) end)
   end
 
   defp process(host, schema_name, base_schema_file, type) do
@@ -123,7 +121,6 @@ defmodule Ktsllex.Schemas do
           "key" -> key_schema
           "value" -> value_schema
         end
-
       _ ->
         {:error, :enoent}
     end
