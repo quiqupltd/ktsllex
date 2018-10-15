@@ -1,7 +1,7 @@
 defmodule Ktsllex.SchemasTest do
   use ExUnit.Case, async: true
 
-  alias Ktsllex.Schemas, as: Subject
+  alias Ktsllex.Schemas, as: Schemas
 
   defmodule HTTPoisonMock do
     def post(url, body, headers) do
@@ -18,12 +18,12 @@ defmodule Ktsllex.SchemasTest do
   end
 
   setup do
-    config = Application.get_env(:ktsllex, Subject)
+    config = Application.get_env(:ktsllex, Schemas)
 
-    Application.put_env(:ktsllex, Subject, http_client: HTTPoisonMock)
+    Application.put_env(:ktsllex, Schemas, http_client: HTTPoisonMock)
 
     on_exit(fn ->
-      Application.put_env(:ktsllex, Subject, config)
+      Application.put_env(:ktsllex, Schemas, config)
     end)
 
     Process.register(self(), :current_test)
@@ -78,7 +78,7 @@ defmodule Ktsllex.SchemasTest do
         headers: headers
       }
 
-      assert [:ok, :ok] == Subject.run(host, schema_name, base_schema_file)
+      assert [:ok, :ok] == Schemas.run(host, schema_name, base_schema_file)
       assert_receive ^key_result
       assert_receive ^value_result
       refute_receive _
@@ -89,7 +89,7 @@ defmodule Ktsllex.SchemasTest do
       schema_name = "schema_name"
       base_schema_file = "./schemas/not-found"
 
-      assert [:error, :error] == Subject.run(host, schema_name, base_schema_file)
+      assert [:error, :error] == Schemas.run(host, schema_name, base_schema_file)
       refute_receive _
     end
   end

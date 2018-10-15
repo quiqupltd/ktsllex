@@ -1,9 +1,9 @@
 # Ktsllex
 
 [![Build Status](https://travis-ci.org/quiqupltd/ktsllex.svg?branch=master)](https://travis-ci.org/quiqupltd/ktsllex)
-[![Coverage Status](https://coveralls.io/repos/github/quiqupltd/ktsllex/badge.svg?branch=master)](https://coveralls.io/github/quiqupltd/ktsllex?branch=master) 
-[![Hex docs](http://img.shields.io/badge/hex.pm-docs-green.svg?style=flat-square)](https://hexdocs.pm/ktsllex) 
-[![Hex Version](http://img.shields.io/hexpm/v/ktsllex.svg?style=flat-square)](https://hex.pm/packages/ktsllex) 
+[![Coverage Status](https://coveralls.io/repos/github/quiqupltd/ktsllex/badge.svg?branch=master)](https://coveralls.io/github/quiqupltd/ktsllex?branch=master)
+[![Hex docs](http://img.shields.io/badge/hex.pm-docs-green.svg?style=flat-square)](https://hexdocs.pm/ktsllex)
+[![Hex Version](http://img.shields.io/hexpm/v/ktsllex.svg?style=flat-square)](https://hex.pm/packages/ktsllex)
 [![License](https://img.shields.io/hexpm/l/ktsllex.svg?style=flat-square)](https://github.com/quiqupltd/ktsllex/blob/master/LICENSE.txt)
 
 Kafka Topic and Schema creator
@@ -11,6 +11,7 @@ Kafka Topic and Schema creator
 ## Setup
 
 Add `ktsllex` to your `deps` list :
+
 ```elixir
  {:ktsllex, "~> 0.0.2"},
 ```
@@ -49,8 +50,7 @@ And update config.exs
     lenses_topic: {:system, "LENSES_TOPIC", "topic_name"}
 ```
 
-* `base_path` - needs to be relitive to a path that is releasted with your app, eg `priv`
-
+- `base_path` - needs to be relitive to a path that is releasted with your app, eg `priv`
 
 ## Usage
 
@@ -63,11 +63,11 @@ $ mix create_topics --host=localhost:3030 --user=admin --password=admin --topic=
 
 ### Options
 
-* `--base`
+- `--base`
 
 The path to the schema files is passed into `mix create_schemas` via `--base=./path/to/schemas/json`.
 
-It expects to find two files there, one ending `-key.json` and one `-value.json`.
+It expects to find a single file there for the schema.
 
 Example: If this command was used:
 
@@ -75,14 +75,13 @@ Example: If this command was used:
 mix create_schemas --base=./schemas/users
 ```
 
-Then there should be two flies in ./schemas:
+Then there should be a single flie in ./schemas:
 
-* `./schemas-key.json`
-* `./schemas-value.json`
+- `./schemas.json`
 
-* `--schema`
+- `--schema`
 
-The `-key` and `-value` schemas get updated based on the `schema` parameter
+The schemas get updated based on the `schema` parameter
 
 Example: Given this `myschema` command :
 
@@ -90,14 +89,22 @@ Example: Given this `myschema` command :
 mix create_schemas --schema=myschema
 ```
 
-And if this is the `schemas-key.json` file :
+And if this is the `schemas.json` file :
 
 ```json
 {
-  "type": "record",
-  "name": "Key",
-  "namespace": "anything",
-  "connect.name": "anything.Key"
+  "name": "test",
+  "key_avro_schema": {
+    "type": "record",
+    "name": "Key",
+    "namespace": "anything",
+    "connect.name": "anything.Key"
+  },
+  "value_avro_schema": {
+    "type": "record",
+    "name": "Envelope",
+    "namespace": "anything"
+  }
 }
 ```
 
@@ -105,10 +112,18 @@ Then it would be updated to
 
 ```json
 {
-  "type": "record",
-  "name": "Key",
-  "namespace": "myschema",
-  "connect.name": "myschema.Key"
+  "name": "test",
+  "key_avro_schema": {
+    "type": "record",
+    "name": "Key",
+    "namespace": "myschema",
+    "connect.name": "myschema.Key"
+  },
+  "value_avro_schema": {
+    "type": "record",
+    "name": "Envelope",
+    "namespace": "myschema"
+  }
 }
 ```
 
@@ -142,8 +157,8 @@ If getting a topic that does not have a compatibility set, it will return this:
 
 ## Development
 
-* `mix deps.get`
-* `mix test`
+- `mix deps.get`
+- `mix test`
 
 ## License
 

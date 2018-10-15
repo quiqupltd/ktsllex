@@ -1,0 +1,14 @@
+{
+  "name": "test",
+  "key_avro_schema": {
+    "type": "record",
+    "name": "Key",
+    "namespace": "anything",
+    "connect.name": "anything.Key"
+  },
+  "value_avro_schema": {
+    "type": "record",
+    "name": "Envelope",
+    "namespace": "anything"
+  }
+}
